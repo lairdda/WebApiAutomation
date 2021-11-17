@@ -11,6 +11,8 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 
+import static org.testng.AssertJUnit.assertEquals;
+
 public class Get401 {
 
     public static final String BASE_ENDPOINT = "https://api.github.com";
@@ -30,43 +32,24 @@ public class Get401 {
     @DataProvider
     private Object[][] endpoints(){
         return new Object[][]{
+                {"/user"},
+                {"/user/followers"},
+                {"/notifications"}
 
         };
     }
 
-    @Test
-    public void userReturns401() throws IOException {
+    @Test (dataProvider = "endpoints")
+    public void userReturns401(String endpoint) throws IOException {
 
-        HttpGet get = new HttpGet(BASE_ENDPOINT + "/user");
-
-        response = client.execute(get);
-
-        int actualStatus = response.getStatusLine().getStatusCode();
-
-        Assert.assertEquals(actualStatus, 401);
-    }
-
-    @Test
-    public void userFollowersReturns401() throws IOException {
-
-        HttpGet get = new HttpGet(BASE_ENDPOINT + "/user/followers");
+        HttpGet get = new HttpGet(BASE_ENDPOINT + endpoint);
 
         response = client.execute(get);
 
         int actualStatus = response.getStatusLine().getStatusCode();
 
-        Assert.assertEquals(actualStatus, 401);
+        assertEquals(actualStatus, 401);
     }
 
-    @Test
-    public void notificationsReturns401() throws IOException {
 
-        HttpGet get = new HttpGet(BASE_ENDPOINT + "/notifications");
-
-        response = client.execute(get);
-
-        int actualStatus = response.getStatusLine().getStatusCode();
-
-        Assert.assertEquals(actualStatus, 401);
-    }
 }
